@@ -1,0 +1,6 @@
+---
+- hosts: Hoa11_Ubuntu
+  become: true
+  roles:
+    - Hoa11_Ubuntu
+
