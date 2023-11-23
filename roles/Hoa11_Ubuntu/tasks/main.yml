@@ -3,7 +3,6 @@
   apt:
     update_cache: yes
     state: present
-  when: ansible_distribution == "Ubuntu"
 
 - name: Install Docker Prerequisites on Ubuntu
   apt:
@@ -14,7 +13,6 @@
     - ca-certificates
     - curl
     - software-properties-common
-  when: ansible_distribution == "Ubuntu"
   async: 3600
   poll: 0
 
@@ -22,7 +20,6 @@
   apt_key:
     url: https://download.docker.com/linux/ubuntu/gpg
     state: present
-  when: ansible_distribution == "Ubuntu"
   async: 3600
   poll: 0
 
@@ -31,7 +28,6 @@
     repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
     state: present
     update_cache: yes
-  when: ansible_distribution == "Ubuntu"
   async: 3600
   poll: 0
 
@@ -39,26 +35,28 @@
   apt:
     name: docker-ce
     state: present
-  when: ansible_distribution == "Ubuntu"
   async: 3600
   poll: 0
+
+- name: Enable Docker Service on Ubuntu
+  systemd:
+    name: docker
+    enabled: yes
+    state: started
 
 - name: Add a Docker Group to my Current User on Ubuntu
   user:
     name: kazuki
     groups: docker
     append: yes
-  when: ansible_distribution == "Ubuntu"
 
 - name: Copy dockerfile on Ubuntu
   copy:
     src: dockerfile
     dest: /var/app/dockerfile
-  when: ansible_distribution == "Ubuntu"
 
 - name: Install and Build Dockerfile on Ubuntu
-  command: "docker build -t kazuki/dockerimage:tag /var/app"
-  when: ansible_distribution == "Ubuntu"
+  command: "docker build -t kazuki/dockerimage:1.0 /var/app"
 
 
 
